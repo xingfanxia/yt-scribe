@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>YT Scribe</title>
+    <link rel="stylesheet" href="../ui/theme.css" />
+    <link rel="stylesheet" href="sidepanel.css" />
+  </head>
+  <body>
+    <header class="bar">
+      <div class="video">
+        <p id="videoTitle" data-i18n="loadingVideo"></p>
+        <p id="videoNote" class="muted"></p>
+      </div>
+      <div class="tools">
+        <button id="historyBtn" class="icon-btn" data-i18n-title="chatHistory" data-i18n-aria="chatHistory">
+          <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8" /><path d="M3 3v5h5M12 7v5l3 2" /></svg>
+        </button>
+        <button id="copyChatBtn" class="icon-btn" data-i18n-title="copyChat" data-i18n-aria="copyChat" disabled>
+          <svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2" /><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" /></svg>
+        </button>
+        <div class="menu-wrap">
+          <button id="exportChatBtn" class="icon-btn" data-i18n-title="exportChat" data-i18n-aria="exportChat" aria-haspopup="menu" disabled>
+            <svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 19h16" /></svg>
+          </button>
+          <div id="exportMenu" class="menu" role="menu" hidden>
+            <button role="menuitem" data-chat-export="md" data-i18n="formatMarkdown"></button>
+            <button role="menuitem" data-chat-export="pdf" data-i18n="formatPdf"></button>
+          </div>
+        </div>
+        <button id="clearChatBtn" class="icon-btn" data-i18n-title="newChat" data-i18n-aria="newChat" disabled>
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
+        </button>
+        <button id="settingsBtn" class="icon-btn" data-i18n-title="settings" data-i18n-aria="settings">
+          <svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0" /><circle cx="16" cy="6" r="2" /><circle cx="10" cy="12" r="2" /><circle cx="18" cy="18" r="2" /></svg>
+        </button>
+      </div>
+    </header>
+
+    <main id="chat" class="chat" aria-live="polite">
+      <div id="emptyState" class="empty">
+        <p id="emptyText" class="muted" data-i18n="openVideoToChat"></p>
+        <button id="addKeyBtn" class="btn primary" data-i18n="addApiKey" hidden></button>
+      </div>
+    </main>
+
+    <section id="suggestions" class="suggestions">
+      <button id="suggestToggle" class="suggest-toggle" aria-expanded="true">
+        <span data-i18n="suggestions"></span>
+        <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></svg>
+      </button>
+      <div id="suggestBody" class="suggest-body">
+        <div class="group" data-group="quick"></div>
+        <div class="group" data-group="study"></div>
+        <div class="group" data-group="research"></div>
+        <div class="group" data-group="create"></div>
+        <div class="group translate-row">
+          <span class="group-label" data-i18n="groupTranslate"></span>
+          <select id="translateSelect" class="field" data-i18n-aria="groupTranslate"></select>
+          <button id="translateBtn" class="chip" data-i18n="translate"></button>
+        </div>
+        <div class="group custom-row">
+          <button id="customBtn" class="chip custom"></button>
+          <button id="editCustomBtn" class="icon-btn" data-i18n-title="editCommand" data-i18n-aria="editCommand">
+            <svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z" /></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <form id="composer" class="composer">
+      <textarea id="input" rows="1" data-i18n-placeholder="askAnything" data-i18n-aria="askAnything"></textarea>
+      <button id="sendBtn" class="btn primary send" type="submit" data-i18n-aria="send" disabled>
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+      </button>
+      <button id="stopBtn" class="btn send" type="button" data-i18n-aria="stop" hidden>
+        <svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="1" /></svg>
+      </button>
+    </form>
+
+    <aside id="historyPanel" class="drawer" hidden>
+      <div class="drawer-head">
+        <h2 data-i18n="chatHistory"></h2>
+        <button id="clearChatsBtn" class="btn small ghost" data-i18n="clearAll"></button>
+        <button id="closeHistoryBtn" class="icon-btn" data-i18n-aria="close">
+          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" /></svg>
+        </button>
+      </div>
+      <ul id="historyList" class="drawer-list"></ul>
+    </aside>
+
+    <dialog id="commandDialog">
+      <form method="dialog">
+        <h2 data-i18n="customCommand"></h2>
+        <label class="muted" for="commandLabel" data-i18n="commandLabel"></label>
+        <input id="commandLabel" class="field" maxlength="24" required />
+        <label class="muted" for="commandPrompt" data-i18n="commandPrompt"></label>
+        <textarea id="commandPrompt" class="field" rows="5" required></textarea>
+        <div class="dialog-actions">
+          <button id="deleteCommand" value="delete" class="btn small ghost" data-i18n="delete"></button>
+          <button value="cancel" class="btn small" formnovalidate data-i18n="cancel"></button>
+          <button value="save" class="btn small primary" data-i18n="save"></button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="../shared/core.js"></script>
+    <script src="../shared/dom.js"></script>
+    <script src="../shared/store.js"></script>
+    <script src="../shared/markdown.js"></script>
+    <script src="../shared/ai.js"></script>
+    <script src="sidepanel.js"></script>
+  </body>
+</html>

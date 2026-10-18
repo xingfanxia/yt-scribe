@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>YT Scribe</title>
+    <link rel="stylesheet" href="../ui/theme.css" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="top">
+      <img src="../../icons/icon32.png" alt="" width="24" height="24" />
+      <div class="top-text">
+        <h1>YT Scribe</h1>
+        <p id="videoLine" class="muted" data-i18n="openVideoFirst"></p>
+      </div>
+      <button id="openOptions" class="icon-btn" data-i18n-title="settings" data-i18n-aria="settings">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" /></svg>
+      </button>
+    </header>
+
+    <main>
+      <div class="actions">
+        <button id="copyBtn" class="btn primary" disabled>
+          <svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2" /><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" /></svg>
+          <span data-i18n="copyTranscript"></span>
+        </button>
+        <button id="exportBtn" class="btn" aria-expanded="false" disabled>
+          <span data-i18n="export"></span>
+        </button>
+      </div>
+      <div id="exportRow" class="export-row" hidden>
+        <button class="btn small" data-export="txt" data-i18n="formatText"></button>
+        <button class="btn small" data-export="md" data-i18n="formatMarkdown"></button>
+        <button class="btn small" data-export="pdf" data-i18n="formatPdf"></button>
+      </div>
+      <button id="chatBtn" class="btn chat-btn">
+        <svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z" /><path d="M8 9h8M8 12h5" /></svg>
+        <span data-i18n="chatAboutVideo"></span>
+      </button>
+
+      <div id="status" class="status" role="status" hidden>
+        <span id="statusText"></span>
+        <button id="retryBtn" class="btn small" data-i18n="retry" hidden></button>
+      </div>
+
+      <section id="previewSection" class="preview" hidden>
+        <div class="preview-head">
+          <span data-i18n="livePreview"></span>
+          <span id="previewMeta" class="muted"></span>
+        </div>
+        <textarea id="preview" class="field" readonly rows="7" data-i18n-aria="livePreview"></textarea>
+      </section>
+
+      <details id="formatPanel" class="panel">
+        <summary data-i18n="outputFormat"></summary>
+        <div class="panel-body">
+          <div class="preset-row">
+            <label for="presetSelect" class="muted" data-i18n="preset"></label>
+            <select id="presetSelect" class="field"></select>
+            <button id="savePreset" class="btn small" data-i18n="saveAsPreset"></button>
+            <button id="managePresets" class="btn small ghost" data-i18n="manage"></button>
+          </div>
+
+          <label class="check"><input type="checkbox" data-format="timestamps" /> <span data-i18n="optTimestamps"></span></label>
+          <label class="check"><input type="checkbox" data-format="title" /> <span data-i18n="optTitle"></span></label>
+          <label class="check"><input type="checkbox" data-format="url" /> <span data-i18n="optUrl"></span></label>
+          <label class="check"><input type="checkbox" data-format="spacing" /> <span data-i18n="optSpacing"></span></label>
+          <label class="check"><input type="checkbox" data-format="paragraph" /> <span data-i18n="optParagraph"></span></label>
+          <label class="check"><input type="checkbox" data-format="prompt" /> <span data-i18n="optPrompt"></span></label>
+          <div id="promptBox" class="prompt-box" hidden>
+            <textarea id="promptText" class="field" rows="4" data-i18n-aria="promptLabel"></textarea>
+            <button id="resetPrompt" class="btn small ghost" data-i18n="resetPrompt"></button>
+          </div>
+
+          <label for="languageSelect" class="muted lang-label" data-i18n="captionLanguage"></label>
+          <select id="languageSelect" class="field"></select>
+        </div>
+      </details>
+
+      <section id="historySection" class="history" hidden>
+        <div class="history-head">
+          <h2 data-i18n="recent"></h2>
+          <button id="toggleHistory" class="btn small ghost" data-i18n="viewAll"></button>
+        </div>
+        <div id="historyAll" hidden>
+          <input id="historySearch" class="field" type="search" data-i18n-placeholder="searchHistory" />
+          <button id="clearHistory" class="btn small ghost" data-i18n="clearHistory"></button>
+        </div>
+        <ul id="historyList" class="history-list"></ul>
+      </section>
+    </main>
+
+    <dialog id="presetDialog">
+      <form method="dialog">
+        <h2 data-i18n="saveAsPreset"></h2>
+        <input id="presetName" class="field" maxlength="30" data-i18n-placeholder="presetNamePlaceholder" required />
+        <p id="presetCount" class="muted small-note">0 / 30</p>
+        <div class="dialog-actions">
+          <button value="cancel" class="btn small" data-i18n="cancel"></button>
+          <button id="confirmPreset" value="save" class="btn small primary" data-i18n="save"></button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="manageDialog">
+      <h2 data-i18n="managePresets"></h2>
+      <ul id="presetList" class="preset-list"></ul>
+      <div class="dialog-actions">
+        <button id="closeManage" class="btn small" data-i18n="close"></button>
+      </div>
+    </dialog>
+
+    <script src="../shared/core.js"></script>
+    <script src="../shared/dom.js"></script>
+    <script src="../shared/store.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

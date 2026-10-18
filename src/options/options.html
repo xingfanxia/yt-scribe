@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>YT Scribe</title>
+    <link rel="stylesheet" href="../ui/theme.css" />
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <header class="head">
+      <img src="../../icons/icon48.png" alt="" width="36" height="36" />
+      <h1><span>YT Scribe</span> <span class="muted" data-i18n="settings"></span></h1>
+      <p id="saved" class="saved" role="status" data-i18n="settingsSaved" hidden></p>
+    </header>
+
+    <main>
+      <section>
+        <h2 data-i18n="secPopup"></h2>
+        <label class="check"><input type="checkbox" data-ui="exportButton" /> <span data-i18n="optExportButton"></span></label>
+        <label class="check"><input type="checkbox" data-ui="livePreview" /> <span data-i18n="optLivePreview"></span></label>
+      </section>
+
+      <section>
+        <h2 data-i18n="secYoutube"></h2>
+        <label class="check"><input type="checkbox" data-ui="pageCopyButton" /> <span data-i18n="optPageCopy"></span></label>
+        <label class="check"><input type="checkbox" data-ui="pageChatButton" /> <span data-i18n="optPageChat"></span></label>
+        <p class="muted hint" id="shortcutHint"></p>
+        <button id="shortcutsBtn" class="btn small" data-i18n="changeShortcuts"></button>
+      </section>
+
+      <section>
+        <h2 data-i18n="secHistory"></h2>
+        <label class="check"><input type="checkbox" id="history" /> <span data-i18n="optHistory"></span></label>
+        <p class="muted hint" data-i18n="historyHint"></p>
+        <button id="clearHistory" class="btn small" data-i18n="clearHistory"></button>
+      </section>
+
+      <section>
+        <h2 data-i18n="secAfterCopy"></h2>
+        <label class="check"><input type="checkbox" id="autoOpen" /> <span data-i18n="optAutoOpen"></span></label>
+        <div id="platformBox" class="grid">
+          <label for="platform" data-i18n="platform"></label>
+          <select id="platform" class="field">
+            <option value="claude">Claude</option>
+            <option value="chatgpt">ChatGPT</option>
+            <option value="gemini">Gemini</option>
+            <option value="perplexity">Perplexity</option>
+            <option value="custom" data-i18n="customUrl"></option>
+          </select>
+          <label for="customUrl" id="customUrlLabel" data-i18n="customUrl"></label>
+          <input id="customUrl" class="field" type="url" placeholder="https://example.com/?q={transcript}" />
+          <p class="muted hint span" id="customUrlHint" data-i18n="customUrlHint"></p>
+        </div>
+      </section>
+
+      <section>
+        <h2 data-i18n="secAi"></h2>
+        <p class="muted hint" data-i18n="aiHint"></p>
+        <form id="aiForm" class="grid">
+          <label for="provider" data-i18n="provider"></label>
+          <select id="provider" class="field">
+            <option value="anthropic">Anthropic (Claude)</option>
+            <option value="openai" data-i18n="openaiCompatible"></option>
+          </select>
+          <label for="apiKey" data-i18n="apiKey"></label>
+          <input id="apiKey" class="field" type="password" autocomplete="off" spellcheck="false" />
+          <label for="model" data-i18n="model"></label>
+          <input id="model" class="field" list="modelList" spellcheck="false" />
+          <datalist id="modelList"></datalist>
+          <label for="baseUrl" data-i18n="baseUrl"></label>
+          <input id="baseUrl" class="field" type="url" spellcheck="false" />
+          <label for="effort" id="effortLabel" data-i18n="effort"></label>
+          <select id="effort" class="field">
+            <option value="low" data-i18n="effortLow"></option>
+            <option value="medium" data-i18n="effortMedium"></option>
+            <option value="high" data-i18n="effortHigh"></option>
+          </select>
+          <div class="span actions">
+            <button class="btn primary" type="submit" data-i18n="saveAi"></button>
+            <button class="btn" type="button" id="testAi" data-i18n="testConnection"></button>
+            <span id="aiStatus" class="muted" role="status"></span>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <script src="../shared/core.js"></script>
+    <script src="../shared/dom.js"></script>
+    <script src="../shared/store.js"></script>
+    <script src="../shared/ai.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

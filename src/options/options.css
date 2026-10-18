@@ -1,0 +1,78 @@
+body {
+  padding: 32px 20px 64px;
+}
+.head,
+main {
+  max-width: 640px;
+  margin: 0 auto;
+}
+.head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.head h1 {
+  flex: 1;
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: -0.015em;
+}
+.head h1 .muted {
+  font-weight: 400;
+}
+.saved {
+  margin: 0;
+  color: var(--ok);
+  font-size: 13px;
+}
+main {
+  display: grid;
+  gap: 14px;
+}
+section {
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  background: var(--surface);
+}
+section h2 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+.hint {
+  margin: 6px 0 8px;
+  font-size: 13px;
+  max-width: 60ch;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  align-items: center;
+  gap: 10px 12px;
+  margin-top: 10px;
+}
+.grid label {
+  color: var(--muted);
+  font-size: 13px;
+}
+.span {
+  grid-column: 1 / -1;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+#aiStatus[data-tone="ok"] {
+  color: var(--ok);
+}
+#aiStatus[data-tone="error"] {
+  color: var(--error);
+}
+@media (max-width: 520px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

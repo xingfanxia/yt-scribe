@@ -1,0 +1,120 @@
+.yts-page-btn {
+  --yts-bg: rgba(0, 0, 0, 0.05);
+  --yts-bg-hover: rgba(0, 0, 0, 0.1);
+  --yts-fg: #0f0f0f;
+  --yts-ok: #1e6b3a;
+  --yts-error: #a32a1c;
+  display: inline-flex;
+  flex: 0 0 auto;
+  margin-inline-end: 8px;
+}
+html[dark] .yts-page-btn {
+  --yts-bg: rgba(255, 255, 255, 0.1);
+  --yts-bg-hover: rgba(255, 255, 255, 0.2);
+  --yts-fg: #f1f1f1;
+  --yts-ok: #8fd9a8;
+  --yts-error: #ffab9f;
+}
+.yts-page-btn > button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  max-width: 280px;
+  padding: 0 14px 0 12px;
+  border: 0;
+  border-radius: 18px;
+  background: var(--yts-bg);
+  color: var(--yts-fg);
+  font: 500 14px/20px Roboto, Arial, sans-serif;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.yts-page-btn > button:hover {
+  background: var(--yts-bg-hover);
+}
+.yts-page-btn > button:focus-visible {
+  outline: 2px solid #f5c84c;
+  outline-offset: 2px;
+}
+.yts-page-btn > button span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.yts-page-btn svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.yts-page-btn[data-state="busy"] > button {
+  cursor: progress;
+}
+.yts-page-btn[data-state="ok"] > button {
+  color: var(--yts-ok);
+}
+.yts-page-btn[data-state="error"] > button {
+  color: var(--yts-error);
+}
+
+#yts-toast {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 2147483647;
+  max-width: 360px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: #16213a;
+  color: #fff;
+  border-left: 4px solid #f5c84c;
+  font: 14px/1.4 Roboto, Arial, sans-serif;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+}
+#yts-toast[data-tone="error"] {
+  border-left-color: #ff7a66;
+}
+#yts-toast[data-show="true"] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  #yts-toast {
+    transition: none;
+  }
+}
+
+/* Bilibili: sit inside the like/coin/favourite toolbar and borrow its colours. */
+.yts-page-btn.yts-bilibili {
+  margin: 0 0 0 16px;
+}
+.yts-page-btn.yts-bilibili > button {
+  height: 28px;
+  padding: 0;
+  gap: 6px;
+  background: transparent;
+  color: var(--text2, #61666d);
+  font: 500 13px/28px -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+.yts-page-btn.yts-bilibili > button:hover {
+  background: transparent;
+  color: var(--brand_blue, #00aeec);
+}
+.yts-page-btn.yts-bilibili svg {
+  width: 22px;
+  height: 22px;
+}
+.yts-page-btn.yts-bilibili[data-state="ok"] > button {
+  color: #1e9d58;
+}
+.yts-page-btn.yts-bilibili[data-state="error"] > button {
+  color: #e5484d;
+}

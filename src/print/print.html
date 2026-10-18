@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>YT Scribe</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      body {
+        max-width: 720px;
+        margin: 40px auto;
+        padding: 0 24px;
+        color: #17203a;
+        background: #fff;
+        font: 11pt/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      }
+      h1 {
+        margin: 0 0 4px;
+        font-size: 18pt;
+        line-height: 1.25;
+      }
+      .source {
+        margin: 0 0 18px;
+        color: #5b6680;
+        font-size: 9.5pt;
+        word-break: break-all;
+      }
+      .prompt {
+        margin: 0 0 18px;
+        padding: 8px 12px;
+        border-left: 3px solid #f5c84c;
+        color: #3c4660;
+        font-style: italic;
+        white-space: pre-wrap;
+      }
+      .line {
+        margin: 0;
+        break-inside: avoid;
+      }
+      .spaced .line {
+        margin-bottom: 8px;
+      }
+      .ts {
+        display: inline-block;
+        min-width: 4.2em;
+        color: #8a6200;
+        font: 600 9.5pt ui-monospace, Menlo, Consolas, monospace;
+        font-variant-numeric: tabular-nums;
+      }
+      .turn {
+        margin: 0 0 16px;
+        break-inside: avoid-page;
+      }
+      .turn h2 {
+        margin: 0 0 4px;
+        font-size: 11pt;
+      }
+      .turn .body {
+        white-space: pre-wrap;
+      }
+      .hint {
+        color: #5b6680;
+        font-size: 10pt;
+      }
+      @media print {
+        body {
+          margin: 0 auto;
+        }
+        .hint {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <p class="hint" id="hint"></p>
+    <article id="doc"></article>
+    <script src="../shared/core.js"></script>
+    <script src="../shared/dom.js"></script>
+    <script src="../shared/markdown.js"></script>
+    <script src="print.js"></script>
+  </body>
+</html>
