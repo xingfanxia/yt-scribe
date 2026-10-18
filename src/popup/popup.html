@@ -14,7 +14,7 @@
         <h1>YT Scribe</h1>
         <p id="videoLine" class="muted" data-i18n="openVideoFirst"></p>
       </div>
-      <button id="openOptions" class="icon-btn" data-i18n-title="settings" data-i18n-aria="settings">
+      <button id="openSettings" class="icon-btn" data-i18n-title="settings" data-i18n-aria="settings" aria-haspopup="dialog">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" /></svg>
       </button>
     </header>
@@ -73,8 +73,6 @@
             <button id="resetPrompt" class="btn small ghost" data-i18n="resetPrompt"></button>
           </div>
 
-          <label for="languageSelect" class="muted lang-label" data-i18n="captionLanguage"></label>
-          <select id="languageSelect" class="field"></select>
         </div>
       </details>
 
@@ -90,6 +88,39 @@
         <ul id="historyList" class="history-list"></ul>
       </section>
     </main>
+
+    <dialog id="settingsDialog" class="settings-dialog" aria-labelledby="settingsTitle">
+      <div class="settings-head">
+        <h2 id="settingsTitle" data-i18n="settings"></h2>
+        <button id="closeSettings" class="icon-btn" data-i18n-aria="close">
+          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" /></svg>
+        </button>
+      </div>
+      <div class="settings-body">
+        <label class="check"><input type="checkbox" data-ui="exportButton" /> <span data-i18n="optExportButton"></span></label>
+        <label class="check"><input type="checkbox" data-ui="livePreview" /> <span data-i18n="optLivePreview"></span></label>
+        <div class="setting-row">
+          <label for="languageSelect" data-i18n="captionLanguage"></label>
+          <select id="languageSelect" class="field"></select>
+        </div>
+        <label class="check"><input type="checkbox" data-ui="pageCopyButton" /> <span data-i18n="optPageCopy"></span></label>
+        <label class="check"><input type="checkbox" data-ui="pageChatButton" /> <span data-i18n="optPageChat"></span></label>
+        <label class="check"><input type="checkbox" id="historyToggle" /> <span data-i18n="optHistory"></span></label>
+        <label class="check"><input type="checkbox" id="autoOpen" /> <span data-i18n="optAutoOpen"></span></label>
+        <div id="platformBox" class="platform-box">
+          <select id="platform" class="field" data-i18n-aria="platform">
+            <option value="claude">Claude</option>
+            <option value="chatgpt">ChatGPT</option>
+            <option value="gemini">Gemini</option>
+            <option value="perplexity">Perplexity</option>
+            <option value="custom" data-i18n="customUrl"></option>
+          </select>
+          <input id="customUrl" class="field" type="url" placeholder="https://example.com/?q={transcript}" data-i18n-aria="customUrl" />
+          <p id="customUrlHint" class="muted note" data-i18n="customUrlHint"></p>
+        </div>
+        <button id="openOptions" class="btn small more-settings" data-i18n="moreSettings"></button>
+      </div>
+    </dialog>
 
     <dialog id="presetDialog">
       <form method="dialog">
@@ -114,6 +145,8 @@
     <script src="../shared/core.js"></script>
     <script src="../shared/dom.js"></script>
     <script src="../shared/store.js"></script>
+    <script src="../shared/markdown.js"></script>
+    <script src="../shared/pdf.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>

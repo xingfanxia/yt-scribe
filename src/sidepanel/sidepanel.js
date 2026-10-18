@@ -372,13 +372,18 @@
       const name = `${Y.sanitizeFilename(state.video.title)} - chat`;
       if (b.dataset.chatExport === "md") Y.download(`${name}.md`, chatMarkdown(), "text/markdown;charset=utf-8");
       else
-        Y.printToPdf({
-          kind: "chat",
-          title: state.video.title,
-          url: state.video.url,
-          messages: state.messages,
-          labels: { user: Y.t("you"), assistant: Y.t("assistant") },
-        });
+        Y.pdf
+          .exportPdf(
+            {
+              kind: "chat",
+              title: state.video.title,
+              url: state.video.url,
+              messages: state.messages,
+              labels: { user: Y.t("you"), assistant: Y.t("assistant") },
+            },
+            name,
+          )
+          .catch(() => {});
     }),
   );
   $("clearChatBtn").addEventListener("click", async () => {

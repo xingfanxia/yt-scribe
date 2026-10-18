@@ -144,9 +144,6 @@
   "clearHistory": {
     "message": "清空历史"
   },
-  "historyCleared": {
-    "message": "历史已清空"
-  },
   "historyEmpty": {
     "message": "复制或导出过的字幕会出现在这里，只保存在本机。"
   },
@@ -240,9 +237,6 @@
   },
   "downloadStarted": {
     "message": "已开始下载"
-  },
-  "pdfOpened": {
-    "message": "已打开打印页，选择「存储为 PDF」即可。"
   },
   "cancel": {
     "message": "取消"
@@ -468,20 +462,11 @@
   "aiTruncated": {
     "message": "回答达到长度上限，被截断了。"
   },
-  "settingsSaved": {
-    "message": "已保存"
-  },
-  "secPopup": {
-    "message": "弹窗"
-  },
   "optExportButton": {
     "message": "显示导出按钮"
   },
   "optLivePreview": {
     "message": "显示预览"
-  },
-  "secYoutube": {
-    "message": "视频页面"
   },
   "optPageCopy": {
     "message": "在视频下方添加「复制字幕」按钮"
@@ -506,17 +491,8 @@
   "changeShortcuts": {
     "message": "修改快捷键"
   },
-  "secHistory": {
-    "message": "历史记录"
-  },
   "optHistory": {
     "message": "保存复制过的字幕和对话"
-  },
-  "historyHint": {
-    "message": "最多 500 个视频，只保存在本浏览器。"
-  },
-  "secAfterCopy": {
-    "message": "复制之后"
   },
   "optAutoOpen": {
     "message": "打开一个 AI 网站，方便直接粘贴"
@@ -588,6 +564,24 @@
   },
   "hostDenied": {
     "message": "未获得访问该接口的权限。"
+  },
+  "moreSettings": {
+    "message": "AI 对话与快捷键…"
+  },
+  "optionsLead": {
+    "message": "弹窗、页面按钮、字幕语言和历史记录的选项在扩展弹窗的设置里。"
+  },
+  "secShortcuts": {
+    "message": "快捷键"
+  },
+  "pdfBuilding": {
+    "message": "正在生成 PDF…"
+  },
+  "pdfFallback": {
+    "message": "这段文字含有 PDF 内置字体不支持的文字，已改为打开打印页，选择「存储为 PDF」即可。"
+  },
+  "pdfFailed": {
+    "message": "PDF 生成失败"
   },
   "printHint": {
     "message": "在打印对话框里选择「存储为 PDF」。"

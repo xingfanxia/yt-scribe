@@ -209,17 +209,17 @@
     const s = state.settings;
     if (kind === "txt") Y.download(`${name}.txt`, formatted(), "text/plain;charset=utf-8");
     if (kind === "md") Y.download(`${name}.md`, Y.formatMarkdown(segments, state.data, s.format, s.promptText), "text/markdown;charset=utf-8");
+    let done = "downloadStarted";
     if (kind === "pdf") {
-      await Y.printToPdf({
-        kind: "transcript",
-        title: state.data.title,
-        url: state.data.url,
-        format: s.format,
-        promptText: s.promptText,
-        segments,
-      });
+      status(Y.t("pdfBuilding"), "busy");
+      const job = { kind: "transcript", title: state.data.title, url: state.data.url, format: s.format, promptText: s.promptText, segments };
+      try {
+        done = (await Y.pdf.exportPdf(job, name)) === "print" ? "pdfFallback" : "downloadStarted";
+      } catch {
+        return status(Y.t("pdfFailed"), "error");
+      }
     }
-    status(Y.t(kind === "pdf" ? "pdfOpened" : "downloadStarted"), "ok");
+    status(Y.t(done), "ok");
     if (s.history) {
       await Y.store.recordTranscript(state.data, state.data.url);
       renderHistory();
@@ -348,6 +348,65 @@
     window.close();
   });
   $("openOptions").addEventListener("click", () => chrome.runtime.openOptionsPage());
+
+  // ---------- in-place settings ----------
+  function renderSettings() {
+    const s = state.settings;
+    document.querySelectorAll("[data-ui]").forEach((box) => (box.checked = Boolean(s.ui[box.dataset.ui])));
+    $("historyToggle").checked = s.history;
+    $("autoOpen").checked = s.platform.autoOpen;
+    $("platform").value = s.platform.id;
+    $("customUrl").value = s.platform.customUrl;
+    $("platformBox").hidden = !s.platform.autoOpen;
+    $("customUrl").hidden = $("customUrlHint").hidden = s.platform.id !== "custom";
+  }
+
+  function settingsChanged() {
+    renderSettings();
+    renderForm();
+    renderPreview();
+    renderHistory();
+    persist();
+  }
+
+  // The popup is only as tall as its content, so grow it while the dialog is open.
+  function fitBodyTo(dialog) {
+    document.body.style.minHeight = `${Math.min(dialog.scrollHeight + 32, 600)}px`;
+  }
+
+  $("openSettings").addEventListener("click", () => {
+    renderSettings();
+    const dialog = $("settingsDialog");
+    dialog.showModal();
+    fitBodyTo(dialog);
+  });
+  $("closeSettings").addEventListener("click", () => $("settingsDialog").close());
+  $("settingsDialog").addEventListener("click", (e) => e.target === e.currentTarget && e.currentTarget.close());
+  $("settingsDialog").addEventListener("close", () => (document.body.style.minHeight = ""));
+  document.querySelectorAll("[data-ui]").forEach((box) =>
+    box.addEventListener("change", () => {
+      state.settings.ui[box.dataset.ui] = box.checked;
+      settingsChanged();
+    }),
+  );
+  $("historyToggle").addEventListener("change", (e) => {
+    state.settings.history = e.target.checked;
+    settingsChanged();
+  });
+  $("autoOpen").addEventListener("change", (e) => {
+    state.settings.platform.autoOpen = e.target.checked;
+    settingsChanged();
+    fitBodyTo($("settingsDialog"));
+  });
+  $("platform").addEventListener("change", (e) => {
+    state.settings.platform.id = e.target.value;
+    settingsChanged();
+    fitBodyTo($("settingsDialog"));
+  });
+  $("customUrl").addEventListener("change", (e) => {
+    state.settings.platform.customUrl = e.target.value.trim();
+    persist();
+  });
 
   $("presetSelect").addEventListener("change", (e) => applyPreset(e.target.value));
   $("savePreset").addEventListener("click", () => {

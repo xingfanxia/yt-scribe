@@ -21,11 +21,6 @@ main {
 .head h1 .muted {
   font-weight: 400;
 }
-.saved {
-  margin: 0;
-  color: var(--ok);
-  font-size: 13px;
-}
 main {
   display: grid;
   gap: 14px;
@@ -75,4 +70,7 @@ section h2 {
   .grid {
     grid-template-columns: 1fr;
   }
+}
+.lead {
+  margin: 0 0 2px;
 }

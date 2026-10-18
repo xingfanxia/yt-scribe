@@ -5,7 +5,8 @@
 //   (Bilibili serves subtitles only to signed-in users; without cookies only the signed-out path is checked)
 // Writes screenshots to scratch/media/e2e/. Requires a Chromium build that allows --load-extension.
 import { chromium } from "playwright";
-import { mkdtempSync, mkdirSync, readFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, statSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
@@ -15,6 +16,13 @@ mkdirSync(shots, { recursive: true });
 const videoUrl = process.argv[2] || "https://www.youtube.com/watch?v=aircAruvnKk";
 const biliUrl = process.env.BILI_URL || "https://www.bilibili.com/video/BV1CsJ16HEsF/";
 const results = [];
+// Text extracted from a PDF with poppler's pdftotext (brew install poppler).
+const pdfText = (path) => execFileSync("pdftotext", ["-l", "2", path, "-"], { encoding: "utf8" });
+const saveDownload = async (download) => {
+  const path = join(shots, download.suggestedFilename());
+  await download.saveAs(path);
+  return path;
+};
 const check = (name, ok, detail = "") => {
   results.push({ name, ok, detail });
   console.log(`${ok ? "PASS" : "FAIL"} ${name}${detail ? ` — ${detail}` : ""}`);
@@ -89,6 +97,21 @@ try {
   await popup.click("#formatPanel summary");
   await popup.screenshot({ path: join(shots, "popup.png"), fullPage: true });
 
+  // In-place settings dialog with the caption language list
+  await popup.click("#openSettings");
+  await popup.waitForFunction(() => document.querySelectorAll("#languageSelect option").length > 1, null, { timeout: 20000 }).catch(() => {});
+  const langOptions = await popup.$$eval("#languageSelect option", (o) => o.map((x) => x.value));
+  check("settings dialog lists caption languages", (await popup.isVisible("#settingsDialog")) && langOptions.length > 1, `${langOptions.length} options`);
+  await popup.screenshot({ path: join(shots, "popup-settings.png") });
+  if (langOptions.includes("de")) {
+    await popup.selectOption("#languageSelect", "de");
+    await popup.waitForFunction(() => /Deutsch|German/.test(document.getElementById("previewMeta").textContent), null, { timeout: 30000 }).catch(() => {});
+    check("choosing a language reloads the transcript", /Deutsch|German/.test(await popup.textContent("#previewMeta")), await popup.textContent("#previewMeta"));
+    await popup.selectOption("#languageSelect", "");
+    await popup.waitForFunction(() => /English/.test(document.getElementById("previewMeta").textContent), null, { timeout: 30000 }).catch(() => {});
+  }
+  await popup.click("#closeSettings");
+
   await popup.evaluate(() => navigator.clipboard.writeText(""));
   await popup.click("#copyBtn");
   await popup.waitForFunction(() => /\d/.test(document.getElementById("statusText").textContent), null, { timeout: 10000 }).catch(() => {});
@@ -111,12 +134,29 @@ try {
   check("markdown export", readFileSync(mdPath, "utf8").startsWith("# "), mdDownload.suggestedFilename());
   const [txtDownload] = await Promise.all([popup.waitForEvent("download"), popup.click("[data-export='txt']")]);
   check("text export", txtDownload.suggestedFilename().endsWith(".txt"), txtDownload.suggestedFilename());
-  const [printPage] = await Promise.all([context.waitForEvent("page"), popup.click("[data-export='pdf']")]);
-  await printPage.waitForSelector(".line", { timeout: 10000 }).catch(() => {});
-  const lines = await printPage.$$eval(".line", (els) => els.length);
-  check("PDF print view rendered", lines > 0, `${lines} lines`);
-  await printPage.screenshot({ path: join(shots, "print.png") });
-  await printPage.close();
+  const [pdfDownload] = await Promise.all([popup.waitForEvent("download", { timeout: 60000 }), popup.click("[data-export='pdf']")]);
+  const pdfPath = await saveDownload(pdfDownload);
+  const pdfHead = readFileSync(pdfPath).subarray(0, 5).toString();
+  const ytPdfText = pdfText(pdfPath);
+  check("PDF downloads directly with real text", pdfHead === "%PDF-" && ytPdfText.includes("neural network"), `${(statSync(pdfPath).size / 1024).toFixed(0)} KB, text starts: ${ytPdfText.slice(0, 60).replace(/\n/g, "⏎")}`);
+
+  // Chat PDF builder (no AI call needed): mixed Chinese/English markdown
+  const chatPdfInfo = await popup.evaluate(async () => {
+    const bytes = await YTS.pdf.chatPdf({
+      title: "测试对话 Test chat",
+      url: "https://www.youtube.com/watch?v=aircAruvnKk",
+      messages: [
+        { role: "user", content: "总结一下" },
+        { role: "assistant", content: "## 要点\n- **神经网络** 是一个函数 [1:35]\n- Layers transform activations step by step." },
+      ],
+      labels: { user: "你", assistant: "AI" },
+    });
+    return { size: bytes.length, b64: btoa(String.fromCharCode(...bytes)) };
+  });
+  const chatPdfPath = join(shots, "chat-test.pdf");
+  (await import("node:fs")).writeFileSync(chatPdfPath, Buffer.from(chatPdfInfo.b64, "base64"));
+  const chatText = pdfText(chatPdfPath);
+  check("chat PDF renders mixed CJK and Latin", chatText.includes("神经网络") && chatText.includes("Layers transform"), `${(chatPdfInfo.size / 1024).toFixed(0)} KB`);
 
   // Presets
   await popup.click("#savePreset");
@@ -162,10 +202,18 @@ try {
   const bili = await context.newPage();
   await bili.goto(biliUrl, { waitUntil: "domcontentloaded" });
   await bili.waitForSelector("video", { timeout: 30000 }).catch(() => {});
+  // Retries until the content script (document_idle) is listening.
   const biliCall = (msg) =>
     sw.evaluate(async (m) => {
       const [tab] = await chrome.tabs.query({ url: "https://www.bilibili.com/*" });
-      return { tabId: tab.id, res: await chrome.tabs.sendMessage(tab.id, m) };
+      for (let i = 0; ; i++) {
+        try {
+          return { tabId: tab.id, res: await chrome.tabs.sendMessage(tab.id, m) };
+        } catch (e) {
+          if (i >= 30) throw e;
+          await new Promise((r) => setTimeout(r, 1000));
+        }
+      }
     }, msg);
   const signedOut = (await biliCall({ type: "yts:transcript", language: "" })).res;
   check("bilibili signed-out asks to sign in", !signedOut.ok && signedOut.code === "login_needed", `code=${signedOut.code}`);
@@ -199,6 +247,13 @@ try {
     await bpop.waitForFunction(() => document.getElementById("preview").value.length > 50, null, { timeout: 30000 }).catch(() => {});
     check("bilibili popup preview", (await bpop.$eval("#preview", (el) => el.value)).length > 50);
     await bpop.screenshot({ path: join(shots, "popup-bilibili.png"), fullPage: true });
+    await bpop.click("#exportBtn");
+    const [bpdf] = await Promise.all([bpop.waitForEvent("download", { timeout: 60000 }), bpop.click("[data-export='pdf']")]);
+    const bpdfPath = await saveDownload(bpdf);
+    const bText = pdfText(bpdfPath);
+    const cjkChars = (bText.match(/[\u4e00-\u9fff]/g) || []).length;
+    check("Chinese PDF keeps CJK text", cjkChars > 50, `${(statSync(bpdfPath).size / 1024).toFixed(0)} KB, ${cjkChars} CJK chars extracted`);
+    execFileSync("pdftoppm", ["-png", "-r", "60", "-f", "1", "-l", "1", bpdfPath, join(shots, "pdf-bilibili")]);
     if (key) {
       const bpanel = await context.newPage();
       await bpanel.setViewportSize({ width: 400, height: 900 });

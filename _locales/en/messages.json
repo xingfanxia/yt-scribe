@@ -144,9 +144,6 @@
   "clearHistory": {
     "message": "Clear history"
   },
-  "historyCleared": {
-    "message": "History cleared"
-  },
   "historyEmpty": {
     "message": "Transcripts you copy or export appear here. History stays on this device."
   },
@@ -240,9 +237,6 @@
   },
   "downloadStarted": {
     "message": "Download started"
-  },
-  "pdfOpened": {
-    "message": "Print view opened. Choose “Save as PDF”."
   },
   "cancel": {
     "message": "Cancel"
@@ -468,20 +462,11 @@
   "aiTruncated": {
     "message": "The answer hit the length limit and was cut off."
   },
-  "settingsSaved": {
-    "message": "Saved"
-  },
-  "secPopup": {
-    "message": "Popup"
-  },
   "optExportButton": {
     "message": "Show the Export button"
   },
   "optLivePreview": {
     "message": "Show the preview"
-  },
-  "secYoutube": {
-    "message": "On video pages"
   },
   "optPageCopy": {
     "message": "Add a Copy transcript button under videos"
@@ -506,17 +491,8 @@
   "changeShortcuts": {
     "message": "Change shortcuts"
   },
-  "secHistory": {
-    "message": "History"
-  },
   "optHistory": {
     "message": "Keep a history of copied transcripts and chats"
-  },
-  "historyHint": {
-    "message": "Up to 500 videos, stored only in this browser."
-  },
-  "secAfterCopy": {
-    "message": "After copying"
   },
   "optAutoOpen": {
     "message": "Open an AI site so you can paste right away"
@@ -588,6 +564,24 @@
   },
   "hostDenied": {
     "message": "Permission for that endpoint was not granted."
+  },
+  "moreSettings": {
+    "message": "AI chat and shortcuts…"
+  },
+  "optionsLead": {
+    "message": "Popup, page button, language and history options live in the extension popup's settings."
+  },
+  "secShortcuts": {
+    "message": "Keyboard shortcuts"
+  },
+  "pdfBuilding": {
+    "message": "Building PDF…"
+  },
+  "pdfFallback": {
+    "message": "This text needs fonts the PDF builder lacks, so the print view opened. Choose “Save as PDF”."
+  },
+  "pdfFailed": {
+    "message": "Couldn't build the PDF"
   },
   "printHint": {
     "message": "Use the print dialog's “Save as PDF” destination."

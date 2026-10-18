@@ -9,56 +9,6 @@
     openai: [],
   };
 
-  let settings = await Y.store.getSettings();
-  let savedTimer = 0;
-  async function save() {
-    await Y.store.saveSettings(settings);
-    $("saved").hidden = false;
-    clearTimeout(savedTimer);
-    savedTimer = setTimeout(() => ($("saved").hidden = true), 1600);
-  }
-
-  // ---------- general ----------
-  function renderGeneral() {
-    document.querySelectorAll("[data-ui]").forEach((box) => (box.checked = Boolean(settings.ui[box.dataset.ui])));
-    $("history").checked = settings.history;
-    $("autoOpen").checked = settings.platform.autoOpen;
-    $("platform").value = settings.platform.id;
-    $("customUrl").value = settings.platform.customUrl;
-    $("platformBox").hidden = !settings.platform.autoOpen;
-    const custom = settings.platform.id === "custom";
-    $("customUrl").hidden = $("customUrlLabel").hidden = $("customUrlHint").hidden = !custom;
-  }
-
-  document.querySelectorAll("[data-ui]").forEach((box) =>
-    box.addEventListener("change", () => {
-      settings.ui[box.dataset.ui] = box.checked;
-      save();
-    }),
-  );
-  $("history").addEventListener("change", (e) => {
-    settings.history = e.target.checked;
-    save();
-  });
-  $("clearHistory").addEventListener("click", async () => {
-    await Y.store.writeHistory([]);
-    $("clearHistory").textContent = Y.t("historyCleared");
-  });
-  $("autoOpen").addEventListener("change", (e) => {
-    settings.platform.autoOpen = e.target.checked;
-    renderGeneral();
-    save();
-  });
-  $("platform").addEventListener("change", (e) => {
-    settings.platform.id = e.target.value;
-    renderGeneral();
-    save();
-  });
-  $("customUrl").addEventListener("change", (e) => {
-    settings.platform.customUrl = e.target.value.trim();
-    save();
-  });
-
   const commands = await chrome.commands.getAll();
   const keyFor = (name) => commands.find((c) => c.name === name)?.shortcut || Y.t("notSet");
   $("shortcutHint").textContent = Y.t("shortcutHint", [keyFor("copy-transcript"), keyFor("toggle-chat")]);
@@ -147,6 +97,5 @@
     }
   });
 
-  renderGeneral();
   renderAi();
 })();
