@@ -169,14 +169,27 @@
     return Y.formatTranscript(state.data.segments, state.data, state.settings.format, state.settings.promptText);
   }
 
+  // Word count + caption language picker sit above the preview; they stay visible
+  // (without the preview label) when the preview itself is turned off.
   function renderPreview() {
-    const show = state.settings.ui.livePreview && state.data;
+    const has = Boolean(state.data);
+    const show = has && state.settings.ui.livePreview;
+    $("transcriptMeta").hidden = !has;
     $("previewSection").hidden = !show;
-    if (!show) return;
-    $("preview").value = formatted();
-    const words = Y.countWords(state.data.segments).toLocaleString();
-    const lang = state.data.track ? ` · ${state.data.track.name}` : "";
-    $("previewMeta").textContent = `${Y.t("wordCount", [words])}${lang}`;
+    $("previewLabel").style.visibility = show ? "" : "hidden";
+    if (!has) return;
+    $("wordMeta").textContent = Y.t("wordCount", [Y.countWords(state.data.segments).toLocaleString()]);
+    syncLanguagePick();
+    if (show) $("preview").value = formatted();
+  }
+
+  // In automatic mode the first option names the track actually in use.
+  function syncLanguagePick() {
+    const select = $("languageSelect");
+    if (!select.options.length) select.add(new Option(Y.t("languageAuto"), ""));
+    const track = state.data && state.data.track;
+    select.options[0].textContent = track ? `${track.name} · ${Y.t("languageAuto")}` : Y.t("languageAuto");
+    select.value = state.settings.language;
   }
 
   async function copy() {
@@ -240,7 +253,7 @@
       }
     }
     if (saved && ![...select.options].some((o) => o.value === saved)) select.add(new Option(`${saved} (${Y.t("saved")})`, saved));
-    select.value = saved;
+    syncLanguagePick();
   }
 
   // ---------- history ----------

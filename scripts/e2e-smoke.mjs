@@ -97,19 +97,23 @@ try {
   await popup.click("#formatPanel summary");
   await popup.screenshot({ path: join(shots, "popup.png"), fullPage: true });
 
-  // In-place settings dialog with the caption language list
-  await popup.click("#openSettings");
+  // Caption language picker next to the word count
   await popup.waitForFunction(() => document.querySelectorAll("#languageSelect option").length > 1, null, { timeout: 20000 }).catch(() => {});
   const langOptions = await popup.$$eval("#languageSelect option", (o) => o.map((x) => x.value));
-  check("settings dialog lists caption languages", (await popup.isVisible("#settingsDialog")) && langOptions.length > 1, `${langOptions.length} options`);
-  await popup.screenshot({ path: join(shots, "popup-settings.png") });
+  const autoLabel = await popup.$eval("#languageSelect", (el) => el.options[el.selectedIndex].textContent);
+  check("language picker beside preview lists tracks", (await popup.isVisible("#languageSelect")) && langOptions.length > 1, `${langOptions.length} options, showing "${autoLabel}"`);
   if (langOptions.includes("de")) {
     await popup.selectOption("#languageSelect", "de");
-    await popup.waitForFunction(() => /Deutsch|German/.test(document.getElementById("previewMeta").textContent), null, { timeout: 30000 }).catch(() => {});
-    check("choosing a language reloads the transcript", /Deutsch|German/.test(await popup.textContent("#previewMeta")), await popup.textContent("#previewMeta"));
+    await popup.waitForFunction(() => /Deutsch|German/.test(document.querySelector("#languageSelect").selectedOptions[0].textContent) && /\d/.test(document.getElementById("wordMeta").textContent) && document.getElementById("status").dataset.tone === "ok", null, { timeout: 30000 }).catch(() => {});
+    const de = await popup.$eval("#preview", (el) => el.value);
+    check("choosing a language reloads the transcript", /\b(und|die|der|ist)\b/.test(de), `${await popup.textContent("#wordMeta")}: ${de.split("\n").slice(2, 3).join("").slice(0, 60)}`);
+    await popup.screenshot({ path: join(shots, "popup-language.png"), clip: { x: 0, y: 0, width: 360, height: 420 } });
     await popup.selectOption("#languageSelect", "");
-    await popup.waitForFunction(() => /English/.test(document.getElementById("previewMeta").textContent), null, { timeout: 30000 }).catch(() => {});
+    await popup.waitForFunction(() => /English/.test(document.querySelector("#languageSelect").selectedOptions[0].textContent), null, { timeout: 30000 }).catch(() => {});
   }
+  await popup.click("#openSettings");
+  check("settings dialog opens in place", await popup.isVisible("#settingsDialog"));
+  await popup.screenshot({ path: join(shots, "popup-settings.png") });
   await popup.click("#closeSettings");
 
   await popup.evaluate(() => navigator.clipboard.writeText(""));

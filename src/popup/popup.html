@@ -44,11 +44,12 @@
         <button id="retryBtn" class="btn small" data-i18n="retry" hidden></button>
       </div>
 
+      <div id="transcriptMeta" class="transcript-meta" hidden>
+        <span id="previewLabel" class="meta-label" data-i18n="livePreview"></span>
+        <span id="wordMeta" class="muted"></span>
+        <select id="languageSelect" class="lang-pick" data-i18n-title="captionLanguage" data-i18n-aria="captionLanguage"></select>
+      </div>
       <section id="previewSection" class="preview" hidden>
-        <div class="preview-head">
-          <span data-i18n="livePreview"></span>
-          <span id="previewMeta" class="muted"></span>
-        </div>
         <textarea id="preview" class="field" readonly rows="7" data-i18n-aria="livePreview"></textarea>
       </section>
 
@@ -99,10 +100,6 @@
       <div class="settings-body">
         <label class="check"><input type="checkbox" data-ui="exportButton" /> <span data-i18n="optExportButton"></span></label>
         <label class="check"><input type="checkbox" data-ui="livePreview" /> <span data-i18n="optLivePreview"></span></label>
-        <div class="setting-row">
-          <label for="languageSelect" data-i18n="captionLanguage"></label>
-          <select id="languageSelect" class="field"></select>
-        </div>
         <label class="check"><input type="checkbox" data-ui="pageCopyButton" /> <span data-i18n="optPageCopy"></span></label>
         <label class="check"><input type="checkbox" data-ui="pageChatButton" /> <span data-i18n="optPageChat"></span></label>
         <label class="check"><input type="checkbox" id="historyToggle" /> <span data-i18n="optHistory"></span></label>
