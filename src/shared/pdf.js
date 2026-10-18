@@ -145,7 +145,7 @@
 
   async function build(allText, title, render) {
     await ensureLib();
-    const doc = new globalThis.PDFDocument({ size: "A4", margin: 0, info: { Title: title || "Transcript", Creator: "YT Scribe" } });
+    const doc = new globalThis.PDFDocument({ size: "A4", margin: 0, info: { Title: title || "Transcript", Creator: "Scribe" } });
     const chunks = [];
     doc.on("data", (c) => chunks.push(c));
     const done = new Promise((resolve) => doc.on("end", resolve));

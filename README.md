@@ -1,10 +1,14 @@
-# YT Scribe
+# Scribe
+
+Video transcripts and AI chat for YouTube and Bilibili (repository `yt-scribe`).
 
 Chrome extension (Manifest V3) that copies, exports and chats with YouTube and Bilibili
 transcripts. It is an independent reimplementation of the feature set of the "Copy Youtube Transcript"
 extension (v1.7.1), with every feature unlocked and no backend, license server or analytics.
 
 ## Install
+
+From the Chrome Web Store once published, or unpacked:
 
 1. `chrome://extensions` → enable Developer mode → **Load unpacked** → select this folder.
 2. Pin the extension. For AI chat, open its Settings and add an Anthropic API key
@@ -84,6 +88,18 @@ _locales/ icons/ fonts/ scripts/ test/
 
 Shared files are classic scripts attached to `globalThis.YTS` because content scripts cannot
 be ES modules. `core.js` and `markdown.js` also export via `module.exports` for Node tests.
+
+## Releasing to the Chrome Web Store
+
+1. Bump `version` in `manifest.json` (and `package.json`).
+2. `npm run package` → `release/scribe-<version>.zip` (runtime files only).
+3. If the UI changed: `ANTHROPIC_API_KEY=... npm run store-assets` regenerates the 1280×800
+   screenshots and the 440×280 promo tile in `docs/store/` (`REUSE_CAPTURES=1` re-composes only).
+4. Upload the zip in the Developer Dashboard; listing text, permission justifications and
+   privacy-practices answers are in [`docs/store/listing.md`](docs/store/listing.md).
+
+The privacy policy is [`docs/privacy.md`](docs/privacy.md), served by GitHub Pages at
+<https://xingfanxia.github.io/yt-scribe/privacy.html>; keep it in step with what the code sends.
 
 ## Development
 

@@ -201,7 +201,7 @@ try {
   const options = await context.newPage();
   await options.goto(`chrome-extension://${extId}/src/options/options.html`);
   await options.screenshot({ path: join(shots, "options.png"), fullPage: true });
-  check("options page renders", (await options.textContent("h1")).includes("YT Scribe"));
+  check("options page renders", (await options.textContent("h1")).includes("Scribe"));
   // ---------- Bilibili ----------
   const bili = await context.newPage();
   await bili.goto(biliUrl, { waitUntil: "domcontentloaded" });

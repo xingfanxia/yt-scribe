@@ -1,6 +1,6 @@
 {
   "extName": {
-    "message": "YT Scribe"
+    "message": "Scribe – 视频字幕与 AI 对话"
   },
   "extDescription": {
     "message": "复制、导出 YouTube 和 B 站字幕，并围绕视频和 AI 对话。"
@@ -587,6 +587,6 @@
     "message": "在打印对话框里选择「存储为 PDF」。"
   },
   "printNothing": {
-    "message": "没有可打印的内容，请从 YT Scribe 重新导出。"
+    "message": "没有可打印的内容，请从 Scribe 重新导出。"
   }
 }

@@ -1,9 +1,10 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "short_name": "YT Scribe",
+  "short_name": "Scribe",
   "description": "__MSG_extDescription__",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "homepage_url": "https://github.com/xingfanxia/yt-scribe",
   "default_locale": "en",
   "minimum_chrome_version": "116",
   "icons": {

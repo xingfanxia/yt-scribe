@@ -5,7 +5,7 @@ import json, pathlib, re
 
 M = {
   # extension
-  "extName": ("YT Scribe", "YT Scribe"),
+  "extName": ("Scribe – Video Transcripts & AI Chat", "Scribe – 视频字幕与 AI 对话"),
   "extDescription": ("Copy, export and chat with YouTube and Bilibili transcripts.", "复制、导出 YouTube 和 B 站字幕，并围绕视频和 AI 对话。"),
   "cmdCopy": ("Copy the transcript of the current video", "复制当前视频字幕"),
   "cmdChat": ("Open or close the AI chat panel", "打开或关闭 AI 对话面板"),
@@ -188,7 +188,7 @@ M = {
   "pdfFailed": ("Couldn't build the PDF", "PDF 生成失败"),
   # print
   "printHint": ("Use the print dialog's “Save as PDF” destination.", "在打印对话框里选择「存储为 PDF」。"),
-  "printNothing": ("Nothing to print. Export again from YT Scribe.", "没有可打印的内容，请从 YT Scribe 重新导出。"),
+  "printNothing": ("Nothing to print. Export again from Scribe.", "没有可打印的内容，请从 Scribe 重新导出。"),
 }
 
 def entry(text):

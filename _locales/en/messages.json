@@ -1,6 +1,6 @@
 {
   "extName": {
-    "message": "YT Scribe"
+    "message": "Scribe – Video Transcripts & AI Chat"
   },
   "extDescription": {
     "message": "Copy, export and chat with YouTube and Bilibili transcripts."
@@ -587,6 +587,6 @@
     "message": "Use the print dialog's “Save as PDF” destination."
   },
   "printNothing": {
-    "message": "Nothing to print. Export again from YT Scribe."
+    "message": "Nothing to print. Export again from Scribe."
   }
 }
